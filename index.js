@@ -8,7 +8,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USERNAE}:${process.env.DB_PASSWORD}@cluster0.pbmq8lu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -41,8 +41,13 @@ async function run() {
         app.get("/myLists/:email", async (req, res) => {
             const email = req.params
             const result = await Spots.find(email).toArray()
-            console.log(email);
             res.send(result)
+        })
+
+        app.get("/details/:id", async (req, res) => {
+            const id = req.params;
+            const result = await Spots.find({_id: new ObjectId(id)}).toArray()
+            res.send(result["0"])
         })
 
         // Send a ping to confirm a successful connection
