@@ -45,9 +45,32 @@ async function run() {
         })
 
         app.get("/details/:id", async (req, res) => {
-            const id = req.params;
+            const {id} = req.params;
             const result = await Spots.find({_id: new ObjectId(id)}).toArray()
             res.send(result["0"])
+        })
+
+        app.put("/update/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = {_id: new ObjectId(id)}
+            const options = { upsert: true };
+            const updateSpot = req.body;
+            const spot = {
+                $set: {
+                    photoUrl: updateSpot.photoUrl,
+                    spotName: updateSpot.spotName,
+                    countryName: updateSpot.countryName,
+                    location: updateSpot.location,
+                    cost: updateSpot.cost,
+                    season: updateSpot.season,
+                    travelTime: updateSpot.travelTime,
+                    totalVisitors: updateSpot.totalVisitors,
+                    shortDisc: updateSpot.shortDisc,
+                }
+            }
+
+            const result = await Spots.updateOne(filter, spot, options);
+            res.send(result)
         })
 
         // Send a ping to confirm a successful connection
