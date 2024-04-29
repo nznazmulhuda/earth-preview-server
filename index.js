@@ -26,16 +26,11 @@ async function run() {
         await client.connect();
 
         const Spots = client.db("Spots").collection("mySpots");
+        const Category = client.db("Spots").collection("category");
 
         app.get("/addSpots", async (req,res)=> {
             const cursor = await Spots.find().toArray();
             res.send(cursor);
-        })
-
-        app.post("/addSpots", async (req,res)=> {
-            const spots = req.body;
-            const result = await Spots.insertOne(spots)
-            res.send(result)
         })
 
         app.get("/myLists/:email", async (req, res) => {
@@ -48,6 +43,17 @@ async function run() {
             const {id} = req.params;
             const result = await Spots.find({_id: new ObjectId(id)}).toArray()
             res.send(result["0"])
+        })
+
+        app.post("/addSpots", async (req,res)=> {
+            const spots = req.body;
+            const result = await Spots.insertOne(spots)
+            res.send(result)
+        })
+
+        app.get("/category", async (req, res) => {
+            const result = await Category.find().toArray()
+            res.send(result)
         })
 
         app.put("/update/:id", async (req, res) => {
