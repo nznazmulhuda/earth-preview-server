@@ -56,6 +56,12 @@ async function run() {
             res.send(result)
         })
 
+        app.get("/category/:counrtyName", async (req,res) => {
+            const countryName = req.params.counrtyName;
+            const result = await Spots.find({countryName: countryName}).toArray();
+            res.send(result)
+        })
+
         app.put("/update/:id", async (req, res) => {
             const id = req.params.id;
             const filter = {_id: new ObjectId(id)}
